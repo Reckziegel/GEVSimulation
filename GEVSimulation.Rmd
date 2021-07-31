@@ -1,0 +1,161 @@
+---
+title: "Generalized Extreme Value (GEV) Distribution"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    css: www/style.css
+    navbar:
+        - { icon: "fa-github", href: "https://github.com/Reckziegel/GEVSimulation", align: right }
+        - { icon: "fa-linkedin", href: "https://www.linkedin.com/in/bernardoreckziegel/", align: right }
+        - { icon: "fa-at", href: "mailto:bernardo_cse@hotmail.com", align: right }
+    theme: 
+      bootswatch: yeti
+      version: 4
+      bg: "#063853"
+      fg: "#011A27"
+      primary: "#E6DF34"
+      base_font: 
+        google: Ovo
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+## Input {.sidebar}
+
+```{r}
+shiny::br()
+
+shiny::sliderInput(
+  inputId = "n_input", 
+  label   = "Simulations", 
+  min     = 1, 
+  max     = 5000, 
+  value   = 1000, 
+  step    = 1)
+
+shiny::sliderInput(
+  inputId = "mean_input", 
+  label   = "Mu", 
+  min     = -0.20,
+  max     = 0.20, 
+  value   = 0, 
+  step    = 0.001)
+
+shiny::sliderInput(
+  inputId = "sigma_input", 
+  label   = "Sigma", 
+  min     = 0.01, 
+  max     = 0.5, 
+  value   = 0.25,  
+  step    = 0.01)
+
+shiny::sliderInput(
+  inputId = "shape_input", 
+  label   = "Shape", 
+  min     = -0.5, 
+  max     = 0.5, 
+  value   = 0, 
+  step    = 0.01
+)
+```
+
+```{r}
+# Data Manipulation
+gev_rand_rct <- shiny::reactive({
+  fExtremes::rgev(n    = input$n_input, 
+                  xi   = input$shape_input, 
+                  mu   = input$mean_input, 
+                  beta = input$sigma_input) 
+})
+
+gev_rand_sorted_rct <- shiny::reactive({
+  sort(gev_rand_rct())
+})
+
+gev_rand_dens_rct <- shiny::reactive({
+  fExtremes::dgev(x    = gev_rand_sorted_rct(), 
+                  xi   = input$shape_input, 
+                  mu   = input$mean_input, 
+                  beta = input$sigma_input)
+})
+
+gev_rand_cdf_rct <- shiny::reactive({
+  fExtremes::pgev(q    = gev_rand_sorted_rct(), 
+                  xi   = input$shape_input, 
+                  mu   = input$mean_input, 
+                  beta = input$sigma_input)
+})
+
+highcharter_density <- shiny::reactive({
+  data.frame(x = gev_rand_sorted_rct(), 
+             d = 100 * (gev_rand_dens_rct() / sum(gev_rand_dens_rct())), 
+             f = gev_rand_cdf_rct()
+             )
+})
+
+# dist_type <- function(x) {
+#   if (x < 0) {
+#     paste0("Fréchet Distribution")
+#   } else if (x == 0) {
+#     paste0("Gumbel Distribution") 
+#   } else {
+#     paste0("Weibull Distribution")
+#   }
+# }
+
+
+
+```
+
+## Column {data-width="650"}
+
+```{r}
+highcharter::renderHighchart({
+  highcharter::hchart(object = highcharter_density(),
+                      type = "spline",
+                      highcharter::hcaes(x = x, y = d)) |>
+    highcharter::hc_xAxis(title = FALSE) |>
+    highcharter::hc_yAxis(title = FALSE) |>
+    highcharter::hc_title(text = "Probability Density Function (PDF)") |> 
+    highcharter::hc_add_theme(highcharter::hc_theme_flatdark())
+})
+```
+
+```{r}
+highcharter::renderHighchart({
+  highcharter::hchart(object = highcharter_density(),
+                      type = "spline",
+                      highcharter::hcaes(x = x, y = f)) |>
+    highcharter::hc_xAxis(title = FALSE) |>
+    highcharter::hc_yAxis(title = FALSE) |>
+    highcharter::hc_title(text = "Cumulative Density Function (CDF)") |> 
+    highcharter::hc_add_theme(highcharter::hc_theme_flatdark()) 
+})
+```
+
+## Column {data-width="350"}
+
+### Explanation
+
+This app is designed to show the impact of that the parameters $\mu$, $\sigma$ and $\xi$ in the Generalized Extreme Value distribution (GEV).
+
+The key parameter is $\xi$, that can encompass three types of limiting cases:
+
+-   For $\xi = 0$, the _Gumbel_ distribution;
+
+-   For $\xi > 0$, the _Weibull_ distribution; and
+
+-   for $\xi < 0$: the _Fréchet_ distribution
+
+Look how $\xi$ distorts the PDF to the right under Weibull parametrization. The
+opposite happens with the Fréchet family (and a long left-tail arises).
+
+
+
+
+
+

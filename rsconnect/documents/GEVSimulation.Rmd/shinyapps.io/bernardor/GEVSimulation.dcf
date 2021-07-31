@@ -1,0 +1,13 @@
+name: GEVSimulation
+title: GEVSimulation
+username:
+account: bernardor
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4442154
+bundleId: 4874176
+url: https://bernardor.shinyapps.io/GEVSimulation/
+when: 1627708018.80259
+lastSyncTime: 1627708018.80259
+asMultiple: FALSE
+asStatic: FALSE
