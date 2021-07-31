@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # GEV Simulation
 
-This a simple designed to show the impact of the parameters $\mu$, $\sigma$ and $\xi$ in the 
+This a simple app designed to show the impact of the parameters $\mu$, $\sigma$ and $\xi$ in the 
 PDF and CDF of a [GEV distribution](https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution).
 
 ```{r}
