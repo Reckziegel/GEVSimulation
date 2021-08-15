@@ -5,9 +5,9 @@ account: reckziegel
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4442154
-bundleId: 4875183
+bundleId: 4925825
 url: https://reckziegel.shinyapps.io/GEVSimulation/
-when: 1627743730.9836
-lastSyncTime: 1627743730.9836
+when: 1629040637.83489
+lastSyncTime: 1629040637.83489
 asMultiple: FALSE
 asStatic: FALSE

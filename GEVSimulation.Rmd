@@ -151,7 +151,7 @@ The key parameter is $\xi$, that can encompass three types of limiting cases:
 
 -   for $\xi < 0$: the _Fréchet_ distribution
 
-Look how $\xi$ distorts the PDF to the right under Weibull parametrization. The
+The shape parameter $\xi$ distorts the PDF to the right under Weibull parametrization. The
 opposite happens with the Fréchet family (and a long left-tail arises).
 
 
